@@ -1,27 +1,34 @@
-import express from `express`;
+import express from "express";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
 const users = [];
 
 const tweets = [];
 
 app.post(`/sign-up`, (req, res) => {
-    users.push(req);
+    users.push(req.body);
     res.send("ok")
 })
 
 app.post(`/tweets`, (req, res) => {
-    tweets.push(req);
+    // console.log(tweets)
+    tweets.push(req.body);
     res.send("ok")
 })
 
 app.get(`/tweets`, (req, res) =>{
-    const postTweets = []
+    let postTweets = []
 
     for (let i = 0; i < 10; i++) {
-        postTweets = tweets[tweets.length - i];
+        if (tweets[tweets.length - i]) {
+            postTweets = tweets[tweets.length - i];
+        }
     }
+    console.log(postTweets)
     res.send(postTweets);
 })
 
