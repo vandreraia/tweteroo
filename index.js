@@ -10,14 +10,29 @@ const users = [];
 const tweets = [];
 
 app.post(`/sign-up`, (req, res) => {
-    users.push(req.body);
-    res.send("ok")
+    if (req.body.username && req.body.avatar) {
+        users.push(req.body);
+    } else {
+        res.sendStatus(400);
+    }
+    res.status(201).send("ok");
 })
 
 app.post(`/tweets`, (req, res) => {
-    // console.log(tweets)
-    tweets.push(req.body);
-    res.send("ok")
+    let myTweet = {};
+
+    if (req.body.tweet) {
+
+        myTweet = {
+            username: req.body.username,
+            avatar: users.find(user => user.username === req.body.username).avatar,
+            tweet: req.body.tweet
+        }
+        tweets.push(myTweet);
+    } else {
+        res.sendStatus(400);
+    }
+    res.status(201).send("ok");
 })
 
 app.get(`/tweets`, (req, res) =>{
@@ -25,10 +40,10 @@ app.get(`/tweets`, (req, res) =>{
 
     for (let i = 0; i < 10; i++) {
         if (tweets[tweets.length - i]) {
-            postTweets = tweets[tweets.length - i];
+            postTweets.push(tweets[tweets.length - i]);
         }
     }
-    console.log(postTweets)
+    
     res.send(postTweets);
 })
 
